@@ -39,7 +39,7 @@
             <h1>Prime Apps</h1>
             <form id="myForm">
                 <input type="text" id="number" number="number">
-                <button type="button" onclick="submitForm()">Submit</button>
+                <button type="button" onclick="submitForm()">OK</button>
             </form>
             <p id="result">It will display judgement result here</p>
 
@@ -60,12 +60,13 @@
     )]
 
     [(code) (
-        (target) var number println
-        (document.getElementById("result").innerText = "{}";) 
-        ({}) 
+        (target) var target println
         (target ( is a prime number.) concat)
         (target ( is not a prime number.) concat)
-        target prime? eval if replace
+        target prime? eval if 
+        
+        (document.getElementById("result").innerText = "{}";)
+        swap ({}) swap replace
     )]
 ] (window) var
 
