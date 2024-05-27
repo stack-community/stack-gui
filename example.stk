@@ -1,0 +1,24 @@
+(
+    <!DOCTYPE html>
+    <html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <h1>StackGUI by WebView!</h1>
+        <button onclick="external.invoke('button_clicked')">Click me</button>
+        <script type="text/javascript">
+            window.external.invoke('Hello from JavaScript!');
+        </script>
+    </body>
+    </html>
+) 
+
+[(app)
+    [(button_clicked) (
+        (ボタンが押されちゃった！) println
+    )]
+] [] instance
+
+gui
