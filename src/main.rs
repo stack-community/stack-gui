@@ -1506,7 +1506,7 @@ impl Executor {
             .resizable(true)
             .debug(true)
             .user_data(())
-            .invoke_handler(|_webview, arg| {
+            .invoke_handler(|webview, arg| {
                 self.stack.push(Type::String(arg.to_string()));
                 self.evaluate_program(
                     handler
@@ -1515,7 +1515,7 @@ impl Executor {
                         .to_owned()
                         .get_string(),
                 );
-                let _result = _webview.eval(&self.pop_stack().get_string());
+                let _result = webview.eval(&self.pop_stack().get_string());
                 Ok(())
             })
             .run()
