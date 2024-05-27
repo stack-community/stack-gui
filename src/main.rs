@@ -1494,6 +1494,7 @@ impl Executor {
 
                 if let Some(code) = handler.get(arg) {
                     self.evaluate_program(code.to_owned().get_string());
+                    let _result =_webview.eval(&self.pop_stack().get_string());
                 }
                 Ok(())
             })
