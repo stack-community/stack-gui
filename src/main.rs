@@ -1,5 +1,4 @@
 use clap::{App, Arg};
-use web_view::*;
 use clipboard::{ClipboardContext, ClipboardProvider};
 use rand::seq::SliceRandom;
 use regex::Regex;
@@ -13,21 +12,26 @@ use std::path::Path;
 use std::thread::{self, sleep};
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 use sys_info::{cpu_num, cpu_speed, hostname, mem_info, os_release, os_type};
+use web_view::*;
 
 fn main() {
     let matches = App::new("StackGUI")
         .version("1.12")
         .author("Stack Programming Community")
         .about("GUI edition of Stack programming language distribution.")
-        .arg(Arg::new("script")
-            .index(1)
-            .value_name("FILE")
-            .help("Sets the script file to execution")
-            .takes_value(true))
-        .arg(Arg::new("debug")
-            .short('d')
-            .long("debug")
-            .help("Enables debug mode"))
+        .arg(
+            Arg::new("script")
+                .index(1)
+                .value_name("FILE")
+                .help("Sets the script file to execution")
+                .takes_value(true),
+        )
+        .arg(
+            Arg::new("debug")
+                .short('d')
+                .long("debug")
+                .help("Enables debug mode"),
+        )
         .get_matches();
 
     if let Some(script) = matches.value_of("script") {
@@ -125,7 +129,7 @@ impl Type {
     }
 
     /// Get string form data
-    fn get_string(&mut self) -> String {
+    fn get_string(&self) -> String {
         match self {
             Type::String(s) => s.to_string(),
             Type::Number(i) => i.to_string(),
@@ -139,7 +143,7 @@ impl Type {
     }
 
     /// Get number from data
-    fn get_number(&mut self) -> f64 {
+    fn get_number(&self) -> f64 {
         match self {
             Type::String(s) => s.parse().unwrap_or(0.0),
             Type::Number(i) => *i,
@@ -784,7 +788,7 @@ impl Executor {
                     audio_device.add("sound", path.clone());
                     audio_device.play("sound");
                     audio_device.wait();
-                    
+
                     self.stack.push(Type::String(path));
                 }
             }
@@ -1157,7 +1161,7 @@ impl Executor {
             // Generate a instance of object
             "instance" => {
                 let data = self.pop_stack().get_list();
-                let mut class = self.pop_stack().get_list();
+                let class = self.pop_stack().get_list();
                 let mut object: HashMap<String, Type> = HashMap::new();
 
                 let name = if !class.is_empty() {
@@ -1448,14 +1452,12 @@ impl Executor {
                     self.stack.push(Type::Error("get-clipboard".to_string()))
                 }
             }
-            
+
             // GUI processing
             "gui" => {
                 let option = self.pop_stack();
-                let html_content = self.pop_stack().get_string();
-                self.gui(html_content, option);
+                self.gui(option);
             }
-
 
             // If it is not recognized as a command, use it as a string.
             _ => self.stack.push(Type::String(command)),
@@ -1474,28 +1476,47 @@ impl Executor {
             Type::String("".to_string())
         }
     }
-    
-    fn gui(&mut self, html_content: String, option: Type) {
-        let (title, handler): (String, HashMap<String, Type> ) = if let Type::Object(title, handler) = option {
-            (title, handler)
-        } else {
-            self.stack.push(Type::Error("not-object".to_string()));
-            return;
-        };
+
+    fn gui(&mut self, option: Type) {
+        let (title, handler): (String, HashMap<String, Type>) =
+            if let Type::Object(title, handler) = option {
+                (title, handler)
+            } else {
+                self.stack.push(Type::Error("not-object".to_string()));
+                return;
+            };
+
+        let width = handler
+            .get("width")
+            .unwrap_or(&Type::Number(800f64))
+            .get_number() as i32;
+        let height = handler
+            .get("height")
+            .unwrap_or(&Type::Number(600f64))
+            .get_number() as i32;
+
+        let layout = handler
+            .get("layout")
+            .unwrap_or(&Type::String("<h1>Hello, StackGUI !!!</h1>".to_string()))
+            .get_string();
 
         web_view::builder()
-            .title(&title)
-            .content(Content::Html(html_content))
-            .size(800, 600)
+            .title(&title.to_string())
+            .content(Content::Html(layout))
+            .size(width, height)
             .resizable(true)
             .debug(true)
             .user_data(())
             .invoke_handler(|_webview, arg| {
-
-                if let Some(code) = handler.get(arg) {
-                    self.evaluate_program(code.to_owned().get_string());
-                    let _result =_webview.eval(&self.pop_stack().get_string());
-                }
+                self.stack.push(Type::String(arg.to_string()));
+                self.evaluate_program(
+                    handler
+                        .get("code")
+                        .unwrap_or(&Type::String("()".to_string()))
+                        .to_owned()
+                        .get_string(),
+                );
+                let _result = _webview.eval(&self.pop_stack().get_string());
                 Ok(())
             })
             .run()

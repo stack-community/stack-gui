@@ -1,22 +1,72 @@
-(
-    <!DOCTYPE html>
-    <html lang="ja">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-        <h1>Hello, StackGUI using WebView!</h1>
-        <button onclick="external.invoke('button_clicked')">Click me</button>
-    </body>
-    </html>
-) 
+(　# Judgement is it prime number #
+    (number) var
+    2 (i) var
+    true (flag) var
+    
+    (   (false) (true)
+        number 2 less if (flag) var
+    ) (
+        (false (flag) var) 
+        (
+            (
+                ( 
+                    false (flag) var
+                ) ()
+                number i mod 0 equal if
 
-[(app)
-    [(button_clicked) (
-        (ボタンが押されちゃった！) println
-        (document.body.style.backgroundColor = 'blue';)
+                i 1 add (i) var
+            )
+            (i number 0.5 pow 1 add less flag and) while
+        ) number 2 mod 0 equal number 3 mod 0 equal or if
+    ) number 4 less if
+    flag
+)
+(prime?) var
+
+
+[(Prime Apps)
+
+    [(width) 500]
+    [(height) 80]
+
+    [(layout) (
+        <html lang="ja">
+        <head>
+            <meta charset="UTF-8">
+            <title>WebView Example</title>
+        </head>
+        <body>
+            <h1>Prime Apps</h1>
+            <form id="myForm">
+                <input type="text" id="number" number="number">
+                <button type="button" onclick="submitForm()">Submit</button>
+            </form>
+            <p id="result">It will display judgement result here</p>
+
+            <script type="text/javascript">
+                function submitForm() {
+                    const number = document.getElementById('number').value;
+                    window.external.invoke(number);
+                }
+            </script>
+       
+            <style>
+                body {
+                    font-family: "Meiryo", sans-serif;
+                }
+            </style>
+        </body>
+        </html>
     )]
-] [] instance
 
-gui
+    [(code) (
+        (target) var number println
+        (document.getElementById("result").innerText = "{}";) 
+        ({}) 
+        (target ( is a prime number.) concat)
+        (target ( is not a prime number.) concat)
+        target prime? eval if replace
+    )]
+] (window) var
+
+layout window [] instance gui
