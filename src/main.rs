@@ -1482,8 +1482,7 @@ impl Executor {
             if let Type::Object(title, handler) = option {
                 (title, handler)
             } else {
-                self.stack.push(Type::Error("not-object".to_string()));
-                return;
+                ("Hello".to_string(), HashMap::new())
             };
 
         let width = handler
