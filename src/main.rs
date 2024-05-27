@@ -187,6 +187,13 @@ impl Type {
             Type::Object(_, object) => object.values().map(|x| x.to_owned()).collect::<Vec<Type>>(),
         }
     }
+
+    fn get_object(&self) -> (String, HashMap<String, Type>) {
+        match self {
+            Type::Object(name, value) => (name.to_owned(), value.to_owned()),
+            _ => ("".to_string(), HashMap::new()),
+        }
+    }
 }
 
 /// Manage program execution
@@ -1205,64 +1212,56 @@ impl Executor {
             // Get property of object
             "property" => {
                 let name = self.pop_stack().get_string();
-                match self.pop_stack() {
-                    Type::Object(_, data) => self.stack.push(
-                        data.get(name.as_str())
-                            .unwrap_or(&Type::Error("property".to_string()))
-                            .clone(),
-                    ),
-                    _ => self.stack.push(Type::Error("not-object".to_string())),
-                }
+                let (_, object) = self.pop_stack().get_object();
+                self.stack.push(
+                    object
+                        .get(name.as_str())
+                        .unwrap_or(&Type::Error("property".to_string()))
+                        .clone(),
+                )
             }
 
             // Call the method of object
             "method" => {
                 let method = self.pop_stack().get_string();
-                match self.pop_stack() {
-                    Type::Object(name, value) => {
-                        let data = Type::Object(name, value.clone());
-                        self.memory
-                            .entry("self".to_string())
-                            .and_modify(|value| *value = data.clone())
-                            .or_insert(data);
+                let (name, value) = self.pop_stack().get_object();
+                let data = Type::Object(name, value.clone());
+                self.memory
+                    .entry("self".to_string())
+                    .and_modify(|value| *value = data.clone())
+                    .or_insert(data);
 
-                        let program: String = match value.get(&method) {
-                            Some(i) => i.to_owned().get_string().to_string(),
-                            None => "".to_string(),
-                        };
+                let program: String = match value.get(&method) {
+                    Some(i) => i.to_owned().get_string().to_string(),
+                    None => "".to_string(),
+                };
 
-                        self.evaluate_program(program)
-                    }
-                    _ => self.stack.push(Type::Error("not-object".to_string())),
-                }
+                self.evaluate_program(program);
             }
 
             // Modify the property of object
             "modify" => {
                 let data = self.pop_stack();
                 let property = self.pop_stack().get_string();
-                match self.pop_stack() {
-                    Type::Object(name, mut value) => {
-                        value
-                            .entry(property)
-                            .and_modify(|value| *value = data.clone())
-                            .or_insert(data.clone());
+                let (name, mut value) = self.pop_stack().get_object();
+                value
+                    .entry(property)
+                    .and_modify(|value| *value = data.clone())
+                    .or_insert(data.clone());
 
-                        self.stack.push(Type::Object(name, value))
-                    }
-                    _ => self.stack.push(Type::Error("not-object".to_string())),
-                }
+                self.stack.push(Type::Object(name, value))
             }
 
             // Get all of properties
-            "all" => match self.pop_stack() {
-                Type::Object(_, data) => self.stack.push(Type::List(
-                    data.keys()
+            "all" => {
+                let (_, value) = self.pop_stack().get_object();
+                self.stack.push(Type::List(
+                    value
+                        .keys()
                         .map(|x| Type::String(x.to_owned()))
                         .collect::<Vec<Type>>(),
-                )),
-                _ => self.stack.push(Type::Error("not-object".to_string())),
-            },
+                ));
+            }
 
             // Commands of external cooperation processing
 
