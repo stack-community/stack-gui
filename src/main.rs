@@ -1478,7 +1478,7 @@ impl Executor {
 
     fn gui(&mut self, option: Type) {
         let (title, handler): (String, HashMap<String, Type>) =
-            if let Type::Object(title, handler) = option {
+            if let Type::Object(title, handler) = option.clone() {
                 (title, handler)
             } else {
                 ("Hello".to_string(), HashMap::new())
@@ -1507,13 +1507,9 @@ impl Executor {
             .user_data(())
             .invoke_handler(|webview, arg| {
                 self.stack.push(Type::String(arg.to_string()));
-                self.evaluate_program(
-                    handler
-                        .get("code")
-                        .unwrap_or(&Type::String("()".to_string()))
-                        .to_owned()
-                        .get_string(),
-                );
+                self.stack.push(option.clone());
+
+                self.evaluate_program("(code) method".to_string());
                 let _result = webview.eval(&self.pop_stack().get_string());
                 Ok(())
             })

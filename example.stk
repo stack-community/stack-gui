@@ -1,47 +1,22 @@
-(　# Judgement is it prime number #
-    (number) var
-    2 (i) var
-    true (flag) var
-    
-    (   (false) (true)
-        number 2 less if (flag) var
-    ) (
-        (false (flag) var) 
-        (
-            (
-                ( 
-                    false (flag) var
-                ) ()
-                number i mod 0 equal if
-
-                i 1 add (i) var
-            )
-            (i number 0.5 pow 1 add less flag and) while
-        ) number 2 mod 0 equal number 3 mod 0 equal or if
-    ) number 4 less if
-    flag
-)
-(prime?) var
-
-
 [(Prime Apps)
 
     [(width) 500]
     [(height) 80]
 
     [(layout) (
-        <html lang="ja">
-        <head>
-            <meta charset="UTF-8">
-            <title>WebView Example</title>
-        </head>
-        <body>
-            <h1>Prime Apps</h1>
-            <form id="myForm">
-                <input type="text" id="number" number="number">
-                <button type="button" onclick="submitForm()">OK</button>
-            </form>
-            <p id="result">It will display judgement result here</p>
+        <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+            </head>
+
+            <body>
+                <h1>Prime Apps</h1>
+                <form id="myForm">
+                    <input type="text" id="number" number="number">
+                    <button type="button" onclick="submitForm()">OK</button>
+                </form>
+                <p id="result">It will display judgement result here</p>
+            </body>
 
             <script type="text/javascript">
                 function submitForm() {
@@ -49,21 +24,44 @@
                     window.external.invoke(number);
                 }
             </script>
-       
+    
             <style>
                 body {
                     font-family: "Meiryo", sans-serif;
                 }
             </style>
-        </body>
         </html>
+    )]
+
+    [(prime?) (　# Judgement is it prime number #
+        (number) var
+        2 (i) var
+        true (flag) var
+        
+        (   (false) (true)
+            number 2 less if (flag) var
+        ) (
+            (false (flag) var) 
+            (
+                (
+                    ( 
+                        false (flag) var
+                    ) ()
+                    number i mod 0 equal if
+
+                    i 1 add (i) var
+                )
+                (i number 0.5 pow 1 add less flag and) while
+            ) number 2 mod 0 equal number 3 mod 0 equal or if
+        ) number 4 less if
+        flag
     )]
 
     [(code) (
         (target) var target println
         (target ( is a prime number.) concat)
         (target ( is not a prime number.) concat)
-        target prime? eval if 
+        target self prime? method if 
         
         (document.getElementById("result").innerText = "{}";)
         swap ({}) swap replace
