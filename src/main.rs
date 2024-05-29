@@ -1476,6 +1476,7 @@ impl Executor {
         }
     }
 
+    /// GUI window manager
     fn gui(&mut self, option: Type) {
         let (title, handler): (String, HashMap<String, Type>) =
             if let Type::Object(title, handler) = option.clone() {
