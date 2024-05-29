@@ -15,7 +15,7 @@
                     <input type="text" id="number" number="number">
                     <button type="button" onclick="submitForm()">OK</button>
                 </form>
-                <p id="result">It will display judgement result here.</p>
+                <p id="result">It will display judgement result here</p>
             </body>
 
             <script type="text/javascript">
@@ -59,9 +59,17 @@
 
     [(code) (
         (target) var target println
-        (target ( is a prime number.) concat)
-        (target ( is not a prime number.) concat)
-        target self prime? method if 
+        
+        (
+            target ( is a prime number ) concat
+        ) (
+            target ( is not a prime number ) concat
+        ) 
+        target self prime? method (result) var
+        result if 
+        
+        ( too) () temp result equal if concat
+        result (temp) var 
         
         (document.getElementById("result").innerText = "{}";)
         swap ({}) swap replace
