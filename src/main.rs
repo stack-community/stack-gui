@@ -1477,24 +1477,24 @@ impl Executor {
     }
 
     /// GUI window manager
-    fn gui(&mut self, option: Type) {
-        let (title, handler): (String, HashMap<String, Type>) =
-            if let Type::Object(title, handler) = option.clone() {
-                (title, handler)
+    fn gui(&mut self, object: Type) {
+        let (title, members): (String, HashMap<String, Type>) =
+            if let Type::Object(title, members) = object.clone() {
+                (title, members)
             } else {
                 ("Hello".to_string(), HashMap::new())
             };
 
-        let width = handler
+        let width = members
             .get("width")
             .unwrap_or(&Type::Number(800f64))
             .get_number() as i32;
-        let height = handler
+        let height = members
             .get("height")
             .unwrap_or(&Type::Number(600f64))
             .get_number() as i32;
 
-        let layout = handler
+        let layout = members
             .get("layout")
             .unwrap_or(&Type::String("<h1>Hello, StackGUI !!!</h1>".to_string()))
             .get_string();
@@ -1508,7 +1508,7 @@ impl Executor {
             .user_data(())
             .invoke_handler(|webview, arg| {
                 self.stack.push(Type::String(arg.to_string()));
-                self.stack.push(option.clone());
+                self.stack.push(object.clone());
 
                 self.evaluate_program("(code) method".to_string());
                 let _result = webview.eval(&self.pop_stack().get_string());
