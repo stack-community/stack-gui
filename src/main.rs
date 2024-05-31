@@ -1,5 +1,7 @@
 use clap::{App, Arg};
 use clipboard::{ClipboardContext, ClipboardProvider};
+use native_dialog::MessageDialog;
+use native_dialog::MessageType;
 use rand::seq::SliceRandom;
 use regex::Regex;
 use rodio::{OutputStream, Sink, Source};
@@ -1456,6 +1458,34 @@ impl Executor {
             "gui" => {
                 let option = self.pop_stack();
                 self.gui(option);
+            }
+
+            // Message box
+            "msgbox" => {
+                let (title, object) = self.pop_stack().get_object();
+
+                MessageDialog::new()
+                    .set_type(
+                        match object
+                            .get("type")
+                            .unwrap_or(&Type::String("info".to_string()))
+                            .get_string()
+                            .as_str()
+                        {
+                            "error" => MessageType::Error,
+                            "warning" => MessageType::Warning,
+                            _ => MessageType::Info,
+                        },
+                    )
+                    .set_title(&title)
+                    .set_text(
+                        &object
+                            .get("text")
+                            .unwrap_or(&Type::String("Hello, StackGUI !!!".to_string()))
+                            .get_string(),
+                    )
+                    .show_alert()
+                    .unwrap();
             }
 
             // If it is not recognized as a command, use it as a string.
