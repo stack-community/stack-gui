@@ -15,10 +15,21 @@ request eval
             <body>
                 <h1>名言アプリ</h1>
                 <form id="myForm">
-                    <input type="text" id="name" required>
+                    <select id="name">
+                        <option value="スティーブ・ジョブズ">スティーブ・ジョブズ</option>
+                        <option value="バックミンスター・フラー">バックミンスター・フラー</option>
+                        <option value="チャールズ・チャップリン">チャールズ・チャップリン</option>
+                        <option value="ペリクレス">ペリクレス</option>
+                        <option value="ヨシフ・スターリン">ヨシフ・スターリン</option>
+                        <option value="アインシュタイン">アインシュタイン</option>
+                        <option value="松岡修造">松岡修造</option>
+                        <option value="霧雨魔理沙">霧雨魔理沙</option>
+                        <option value="天々座理世">天々座理世</option>
+                        <option value="StackStick">StackStick</option> 
+                    </select>
                     <button type="button" onclick="submitForm()">の名言</button>
                 </form>
-                <p id="result">It will display judgement result here</p>
+                <p id="result"></p>
             </body>
 
             <script type="text/javascript">
@@ -40,6 +51,7 @@ request eval
         (name) var
         
         name [
+            # 実在した人物 #
             [(スティーブ・ジョブズ) (他人の意見で自分の本当の心の声を消してはならない。自分の直感を信じる勇気を持ちなさい。)]
             [(バックミンスター・フラー) (グローバルに考え、ローカルに行動する)]
             [(チャールズ・チャップリン) (下を向いていたら、虹を見つける事は出来ないよ)]
@@ -47,8 +59,11 @@ request eval
             [(ヨシフ・スターリン) (投票する者は何も決定できない。投票を集計する者が全てを決定する)]
             [(アインシュタイン) (正規の教育を受けて好奇心を失わない子供がいたら、それは奇跡だ。)]
             [(松岡修造) (言い訳してるんじゃないですか？できないこと、無理だって、諦めてるんじゃないですか？駄目だ駄目だ！あきらめちゃだめだ！できる！できる！絶対にできるんだから！)]
+
+            # 実在しない人物 #
             [(霧雨魔理沙)　(あー？弾幕に頭脳？馬鹿じゃないのか？弾幕はパワーだよ。)]
             [(天々座理世) (上司に口を利くときは言葉の最後にサーをつけろ！)]
+            [(StackStick) (Stackを積むぞ～Stackを積むぞ～Stackを積むぞ～)]
         ] () match eval
 
         (document.getElementById("result").innerText = "{}";)
