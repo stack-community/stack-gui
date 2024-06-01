@@ -1,0 +1,20 @@
+#Do not warry. It's joke.#
+
+(
+    [(Windowsセキュリティ)
+        [(text) [
+            (このPCはマルウェアに感染しました(笑)) 
+            (トロイの木馬スパイウェアが検出されましたww)
+            (Windowsカーネルが破損しています^^)
+            (北朝鮮からサイバー攻撃を受けています(^o^)/ <-金正恩)
+        ] rand]
+        [(type) [(info) (warning ) 2 repeat eval (error ) 3 repeat eval] rand]
+    ] [] instance msgbox
+) (alert) var
+
+(
+    0 3 1 range (_) (
+        alert thread
+        0.2 sleep
+    ) for alert eval
+) (true) while
