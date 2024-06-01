@@ -1,0 +1,59 @@
+(https://stack-community.github.io/library/macro.stk)
+request eval
+
+[(名言アプリ)
+
+    [(width) 500]
+    [(height) 80]
+
+    [(layout) (
+        <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+            </head>
+
+            <body>
+                <h1>名言アプリ</h1>
+                <form id="myForm">
+                    <input type="text" id="name" required>
+                    <button type="button" onclick="submitForm()">の名言</button>
+                </form>
+                <p id="result">It will display judgement result here</p>
+            </body>
+
+            <script type="text/javascript">
+                function submitForm() {
+                    const name = document.getElementById('name').value;
+                    window.external.invoke(name);
+                }
+            </script>
+    
+            <style>
+                body {
+                    font-family: "Meiryo", sans-serif;
+                }
+            </style>
+        </html>
+    )]
+
+    [(code) (
+        (name) var
+        
+        name [
+            [(スティーブ・ジョブズ) (他人の意見で自分の本当の心の声を消してはならない。自分の直感を信じる勇気を持ちなさい。)]
+            [(バックミンスター・フラー) (グローバルに考え、ローカルに行動する)]
+            [(チャールズ・チャップリン) (下を向いていたら、虹を見つける事は出来ないよ)]
+            [(ペリクレス) (アテナイの住民は私的な利益を尊重するが、それは公的利益への関心を高めるためでもある。なぜなら私益追求を目的として培われた能力であっても、公的な活動に応用可能であるからだ)]
+            [(ヨシフ・スターリン) (投票する者は何も決定できない。投票を集計する者が全てを決定する)]
+            [(アインシュタイン) (正規の教育を受けて好奇心を失わない子供がいたら、それは奇跡だ。)]
+            [(松岡修造) (言い訳してるんじゃないですか？できないこと、無理だって、諦めてるんじゃないですか？駄目だ駄目だ！あきらめちゃだめだ！できる！できる！絶対にできるんだから！)]
+            [(霧雨魔理沙)　(あー？弾幕に頭脳？馬鹿じゃないのか？弾幕はパワーだよ。)]
+            [(天々座理世) (上司に口を利くときは言葉の最後にサーをつけろ！)]
+        ] () match eval
+
+        (document.getElementById("result").innerText = "{}";)
+        swap ({}) swap replace
+    )]
+] (window) var
+
+window [] instance gui
