@@ -13,5 +13,5 @@ sys-info = "0.7.0"
 clap = "3.0"
 clipboard = "0.5"
 rusty_audio = "1.4.1"
-web-view = "0.4.1"
+web-view = { git = "https://github.com/Boscop/web-view.git", rev = "82d7cbce6228b1a964673cc0f22944ad808eab42" }
 native-dialog = "0.5.4"
